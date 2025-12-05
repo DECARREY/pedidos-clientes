@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Herramienta del Vendedor: Decodificador de Pedidos</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .container-box {
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+        }
+        .error-message {
+            color: #ef4444;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+
+    <div class="container-box">
+        <h1 class="text-3xl font-bold mb-6 text-gray-800">Decodificador y Generador de Pedidos</h1>
+        <p class="mb-6 text-gray-600">Pega el mensaje de WhatsApp del cliente en el área de abajo. La herramienta decodificará automáticamente el pedido para su validación e importación.</p>
+
+        <div class="mb-6 border-b pb-4">
+            <label for="whatsapp-message" class="block text-lg font-medium text-gray-700 mb-2">1. Pegar Mensaje de WhatsApp</label>
+            <textarea id="whatsapp-message" rows="5" class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 mt-1 block w-full sm:text-sm border border-gray-300 rounded-md p-3" placeholder="Pega el mensaje completo de WhatsApp aquí, incluyendo el código."></textarea>
+            <button onclick="decodeAndProcess()" class="mt-3 w-full inline-flex items-center justify-center px-4 py-2 border border-transparent shadow-sm text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                Decodificar Pedido
+            </button>
+            <div id="status-message" class="mt-3 text-sm font-semibold"></div>
+        </div>
+
+        <div class="mb-6 border-b pb-4">
+            <label for="client-name" class="block text-lg font-medium text-gray-700 mb-2">2. Asignar Cliente (Manual)</label>
+            <input type="text" id="client-name" class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 mt-1 block w-full sm:text-sm border border-gray-300 rounded-md p-2" placeholder="Ej: Farmacia Central S.A. de C.V.">
+        </div>
+
+        <div class="mb-6">
+            <h2 class="text-xl font-bold text-gray-800 mb-3">3. Revisión y Validación del Pedido</h2>
+            <div id="order-review" class="overflow-x-auto shadow ring-1 ring-black ring-opacity-5 sm:rounded-lg">
+                <table class="min-w-full divide-y divide-gray-300">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">Código (SKU)</th>
+                            <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Descripción (Simulada)</th>
+                            <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Cantidad</th>
+                            <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Validación</th>
+                        </tr>
+                    </thead>
+                    <tbody id="order-table-body" class="divide-y divide-gray-200 bg-white">
+                        <tr id="initial-row"><td colspan="4" class="px-6 py-4 text-sm text-gray-500 text-center">Aún no hay un pedido decodificado.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="pt-4 border-t">
+            <label class="block text-lg font-medium text-gray-700 mb-2">4. Generar Plantilla de Importación</label>
+            <button onclick="downloadCSV()" id="download-button" class="w-full inline-flex items-center justify-center px-4 py-2 border border-transparent shadow-sm text-base font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500" disabled>
+                Descargar Plantilla (CSV)
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Catálogo de Productos Simplificado (Simulación de BD)
+        // En una solución real, esta data se cargaría desde tu sistema
+        const CATALOGO = {
+            "A0004": { "desc": "Analgesico Forte 500mg", "price": 12.50 },
+            "A0025": { "desc": "Vitaminas B12 Complex", "price": 45.00 },
+            "A0035": { "desc": "Curitas Adhesivas 50pz", "price": 8.75 },
+            "A0050": { "desc": "Termómetro Digital", "price": 98.00 },
+            "B1012": { "desc": "Gasa Esterilizada 10x10", "price": 2.10 },
+            "C2020": { "desc": "Mascarilla N95 Negra", "price": 15.00 }
+        };
+
+        let decodedOrder = [];
+
+        function base64Decode(str) {
+            try {
+                // Decodifica Base64 a string binaria, luego a UTF-8
+                return decodeURIComponent(atob(str).split('').map(function(c) {
+                    return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+                }).join(''));
+            } catch (e) {
+                return null;
+            }
+        }
+
+        function decodeAndProcess() {
+            const message = document.getElementById('whatsapp-message').value;
+            const statusDiv = document.getElementById('status-message');
+            const tableBody = document.getElementById('order-table-body');
+            const downloadButton = document.getElementById('download-button');
+            
+            statusDiv.className = 'mt-3 text-sm font-semibold';
+            statusDiv.textContent = 'Buscando código de pedido...';
+            downloadButton.disabled = true;
+            tableBody.innerHTML = '';
+            decodedOrder = [];
+
+            // 1. Buscar el código codificado
+            const regex = /\[PEDIDO_INICIO\](.*?)\[PEDIDO_FIN\]/s;
+            const match = message.match(regex);
+
+            if (!match) {
+                statusDiv.textContent = 'Error: No se encontró el código [PEDIDO_INICIO]...[PEDIDO_FIN] en el mensaje.';
+                statusDiv.classList.add('error-message');
+                tableBody.innerHTML = '<tr id="initial-row"><td colspan="4" class="px-6 py-4 text-sm text-gray-500 text-center">Error al procesar el mensaje. Verifique el formato.</td></tr>';
+                return;
+            }
+
+            const base64Payload = match[1].trim();
+            statusDiv.textContent = 'Código Base64 encontrado. Decodificando...';
+
+            // 2. Decodificar Base64
+            const jsonString = base64Decode(base64Payload);
+
+            if (!jsonString) {
+                statusDiv.textContent = 'Error: Falló la decodificación Base64. El código es inválido.';
+                statusDiv.classList.add('error-message');
+                tableBody.innerHTML = '<tr id="initial-row"><td colspan="4" class="px-6 py-4 text-sm text-gray-500 text-center">Error al decodificar.</td></tr>';
+                return;
+            }
+
+            // 3. Parsear JSON
+            try {
+                const parsedData = JSON.parse(jsonString);
+
+                if (!Array.isArray(parsedData) || parsedData.length === 0) {
+                    statusDiv.textContent = 'Error: El JSON decodificado está vacío o no es un formato válido de pedido.';
+                    statusDiv.classList.add('error-message');
+                    tableBody.innerHTML = '<tr id="initial-row"><td colspan="4" class="px-6 py-4 text-sm text-gray-500 text-center">Pedido decodificado vacío.</td></tr>';
+                    return;
+                }
+
+                // 4. Procesar y Validar Pedido
+                decodedOrder = parsedData.map(item => {
+                    const sku = item.s;
+                    const quantity = item.q;
+                    const productInfo = CATALOGO[sku];
+
+                    const validation = productInfo ? 'OK' : 'SKU No Encontrado';
+                    const description = productInfo ? productInfo.desc : 'N/A';
+                    
+                    return {
+                        sku: sku,
+                        quantity: quantity,
+                        description: description,
+                        validation: validation,
+                        price: productInfo ? productInfo.price : 0
+                    };
+                });
+
+                // 5. Renderizar Tabla
+                renderOrderTable(decodedOrder);
+
+                statusDiv.textContent = `¡Pedido decodificado exitosamente! ${decodedOrder.length} líneas de producto encontradas.`;
+                statusDiv.classList.remove('error-message');
+                statusDiv.classList.add('text-green-600');
+                downloadButton.disabled = false;
+
+            } catch (e) {
+                statusDiv.textContent = 'Error: El JSON decodificado es inválido.';
+                statusDiv.classList.add('error-message');
+                tableBody.innerHTML = '<tr id="initial-row"><td colspan="4" class="px-6 py-4 text-sm text-gray-500 text-center">Error en el formato JSON del pedido.</td></tr>';
+            }
+        }
+
+        function renderOrderTable(order) {
+            const tableBody = document.getElementById('order-table-body');
+            tableBody.innerHTML = ''; // Limpiar tabla
+
+            order.forEach(item => {
+                const row = document.createElement('tr');
+                const validationClass = item.validation === 'OK' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800';
+
+                row.innerHTML = `
+                    <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">${item.sku}</td>
+                    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">${item.description}</td>
+                    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">${item.quantity}</td>
+                    <td class="whitespace-nowrap px-3 py-4 text-sm">
+                        <span class="inline-flex rounded-full px-2 text-xs font-semibold leading-5 ${validationClass}">
+                            ${item.validation}
+                        </span>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        function downloadCSV() {
+            if (decodedOrder.length === 0) {
+                alert("No hay pedido para descargar.");
+                return;
+            }
+
+            const clientName = document.getElementById('client-name').value.trim() || 'SIN_ASIGNAR';
+            const headers = ["ID_CLIENTE", "SKU", "CANTIDAD", "PRECIO_UNITARIO", "ESTADO_VALIDACION"];
+            
+            // Reemplaza comas y saltos de línea en el nombre del cliente para evitar problemas en el CSV
+            const safeClientName = clientName.replace(/,/g, '').replace(/\n/g, ' ');
+
+            let csvContent = headers.join(",") + "\n";
+            
+            decodedOrder.forEach(item => {
+                const row = [
+                    safeClientName,
+                    item.sku,
+                    item.quantity,
+                    item.price.toFixed(2), // Formato de precio con 2 decimales
+                    item.validation
+                ];
+                csvContent += row.join(",") + "\n";
+            });
+
+            // Crear y descargar el archivo CSV
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.setAttribute('href', url);
+            
+            const now = new Date();
+            const dateStr = now.toISOString().slice(0, 10).replace(/-/g, ''); // YYYYMMDD
+            link.setAttribute('download', `Pedido_${dateStr}_${safeClientName.substring(0, 15).replace(/\s/g, '_')}.csv`);
+            
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            alert(`Plantilla CSV descargada exitosamente para el cliente: ${clientName}`);
+        }
+    </script>
+
+</body>
+</html>
