@@ -205,24 +205,28 @@
         }
 
         function generateOrder() {
-            let orderLines = [];
-            Object.keys(cart).forEach(sku => {
-                const quantity = cart[sku];
-                orderLines.push(`${sku} x ${quantity}`);
-            });
-            if (orderLines.length === 0) {
-                alert("Por favor, agrega al menos un producto al carrito.");
-                return;
-            }
-            const header = "*¡Nuevo Pedido!* 📝\n\n";
-            const body = orderLines.join('\n');
-            const footer = "\n\n—\n_Generado con la PWA NORVET_";
-            const whatsappMessage = header + body + footer;
-            const encodedMessage = encodeURIComponent(whatsappMessage);
-            const whatsappUrl = `https://wa.me/?text=${encodedMessage}`;
-            window.open(whatsappUrl, '_blank');
-        }
+    let orderLines = [];
+    Object.keys(cart).forEach(sku => {
+        const quantity = cart[sku];
+        const producto = CATALOGO[sku];
+        // Ahora incluye código, cantidad y descripción completa
+        orderLines.push(`${sku} x ${quantity} - ${producto.desc}`);
+    });
 
+    if (orderLines.length === 0) {
+        alert("El carrito está vacío. Agrega productos antes de tu pedido.");
+        return;
+    }
+
+    const header = "*¡NUEVO PEDIDO NORVET!* \n\n";
+    const body = orderLines.join('\n');
+    const total = Object.keys(cart).reduce((sum, sku) => sum + cart[sku] * CATALOGO[sku].price, 0);
+    const footer = `\n\n*Total: $${total.toFixed(2)}*\n\n—\nEnviado desde la App NORVET`;
+
+    const mensajeFinal = header + body + footer;
+    const url = `https://wa.me/?text=${encodeURIComponent(mensajeFinal)}`;
+    window.open(url, '_blank');
+}
         // Inicializar la aplicación
         document.addEventListener('DOMContentLoaded', renderProductList);
 
@@ -233,3 +237,4 @@
     </script>
 </body>
 </html>
+
