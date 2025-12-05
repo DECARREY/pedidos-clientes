@@ -48,7 +48,7 @@
                     <thead class="bg-gray-50">
                         <tr>
                             <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">Código (SKU)</th>
-                            <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Descripción (NORVET)</th>
+                            <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Descripción (Simulada)</th>
                             <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Cantidad</th>
                             <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Validación</th>
                         </tr>
@@ -69,8 +69,8 @@
     </div>
 
     <script>
-        // Catálogo de Productos NORVET (Actualizado del CSV)
-        // SKU: { desc: "Descripción", price: Precio}
+        // Catálogo de Productos NORVET 2025 (Datos extraídos del archivo PRECIOS NORVET 2025F AAP.xlsx - Hoja1.csv)
+        // Cita de datos:
         const CATALOGO = {
             "A0003": { "desc": "CEFTRIA-PETS 50 mg NRV 10 ml.", "price": 142 },
             "A0004": { "desc": "CEFTRIA-JET 75 mg NRV 20 ml.", "price": 205 },
@@ -78,10 +78,7 @@
             "A0006": { "desc": "CLINDA- JET 100 mg/ml. 25 ml.", "price": 435 },
             "A0007": { "desc": "FLOXI-JET 5% INY. NRV. 20 ml.", "price": 107 },
             "A0010": { "desc": "FLOXI-JET 10% INY. NRV. 250 ml.", "price": 756 },
-            "A0013": { "desc": "FLUVI-JET PLUS L.A 1.2 Mill", "price": 128 },
-            "A0014": { "desc": "FLUVI-JET PLUS L.A 2.4 mill", "price": 165 },
             "A0015": { "desc": "FLUVI-JET PLUS L.A 6 mill", "price": 242 },
-            "A0017": { "desc": "GENTA-JET 100 NRV. 15 ml.", "price": 120 },
             "A0019": { "desc": "GENTA-JET 100 NRV. 100 ml.", "price": 429 },
             "A0023": { "desc": "GENTY- JET NRV. 250 ml.", "price": 1354 },
             "A0025": { "desc": "OXYJET NRV-50 100 ml.", "price": 165 },
@@ -128,18 +125,14 @@
             "A0091": { "desc": "CLOXIDRY 800 NRV Secado 24 x 5 gr.", "price": 1338 },
             "A0103": { "desc": "CEFTIO-JET 5% NRV 250 ml.", "price": 1571 },
             "A0110": { "desc": "FLORFENI-JET NRV DX 250 ml", "price": 1804 },
-            "A0111": { "desc": "FLUVI-JET PLUS L.A 4 mill", "price": 181 },
-            "A0113": { "desc": "TILMICO-JET NRV 20 ml.", "price": 284 },
             "A0123": { "desc": "SULFA-JET NRV 100 ML", "price": 600 },
             "A0124": { "desc": "SULFA-JET NRV 250 ML", "price": 1102 },
             "A0132": { "desc": "SULFA-JET NRV 15 ML", "price": 128 },
             "A0141": { "desc": "SECA-JET NRV Secado 24 x 10 gr.", "price": 2405 },
             "A0148": { "desc": "TULAX NRV 500 ml.", "price": 18318 },
-            "AN0001": { "desc": "PRODOL-JET NRV. 30 ml.", "price": 105 },
             "AN0002": { "desc": "PRODOL-JET NRV. 100 ml.", "price": 189 },
             "AN0003": { "desc": "PRODOL-JET NRV. 250 ml.", "price": 376 },
             "AN0004": { "desc": "DEXA-JET NRV 15 ml.", "price": 76 },
-            "AN0005": { "desc": "DEXA-JET NRV 30 ml.", "price": 143 },
             "AN0006": { "desc": "DEXA-JET NRV 100 ml.", "price": 299 },
             "AN0007": { "desc": "PREDNI - PETS 5 mg. 30 Tabs. S", "price": 233 },
             "AN0008": { "desc": "PREDNI - PETS 12.5 mg. 30 Tabs. M", "price": 316 },
@@ -200,7 +193,6 @@
             "C0002": { "desc": "CARTI PETS 25 30 Tabs.", "price": 987 },
             "C0003": { "desc": "CARTI-PETS PLUS 25 (Con Meloxicam) 30 Tabs. 2.5GRS", "price": 1278 },
             "C0004": { "desc": "CARTI PETS PLUS 10 NRV 30 Tabs.", "price": 732 },
-            "C0005": { "desc": "CARTRY-JET 3 ML", "price": 1241 },
             "C0006": { "desc": "CARTRY-JET 6 ML", "price": 2171 },
             "C0007": { "desc": "CARTRY-JET 8 ML", "price": 2603 },
             "C0008": { "desc": "CARTRY-JET 4 ML", "price": 1405 },
@@ -220,7 +212,6 @@
             "CA0005": { "desc": "RAMIPRIL NRV S 30 Tabs.", "price": 331 },
             "CA0006": { "desc": "RAMIPRIL NRV M 30 Tabs.", "price": 568 },
             "CA0007": { "desc": "RAMIPRIL NRV L 30 Tabs.", "price": 916 },
-            "CA0012": { "desc": "PENTOXI-PETS NRV XL 30 Tabs.", "price": 596 },
             "CA0017": { "desc": "SILDENA PETS S 10 Tabs", "price": 114 },
             "CA0018": { "desc": "SILDENA PETS M 10 Tabs", "price": 149 },
             "CA0019": { "desc": "PIMO PETS S NRV 1.25mg 30 tabs.", "price": 385 },
@@ -239,7 +230,6 @@
             "D0012": { "desc": "COMPLET PLUS M NRV 30 Tabs.", "price": 663 },
             "D0013": { "desc": "COMPLET PLUS L NRV 20 Tabs.", "price": 860 },
             "D0014": { "desc": "EQUIPASTA (UNA DOSIS) 10 gr.", "price": 195 },
-            "D0015": { "desc": "EQUIPASTA (DOS DOSIS) 20 gr.", "price": 247 },
             "D0016": { "desc": "EQUINOX PLUS PASTA (600 kg) 30 gr.", "price": 316 },
             "D0018": { "desc": "IVER PET'S PLUS S 30 Tabs.", "price": 442 },
             "D0020": { "desc": "IVER PETS PLUS L 30 Tabs.", "price": 1199 },
@@ -248,7 +238,6 @@
             "D0026": { "desc": "NORALBEN 2.5% 200 ml.", "price": 219 },
             "D0030": { "desc": "NORALBEN 10% Co. 1 lt.", "price": 1494 },
             "D0037": { "desc": "OROL-JET 12% + B COMPLEX. 500 ml.", "price": 676 },
-            "D0040": { "desc": "OROL-JET 12 + ADE NRV. 500 ml.", "price": 962 },
             "D0041": { "desc": "IVER NRV AS 15 ml.", "price": 70 },
             "D0043": { "desc": "IVER NRV AS 100 ml.", "price": 402 },
             "D0045": { "desc": "IVER NRV AS 500 ml.", "price": 1608 },
@@ -280,15 +269,7 @@
             "DI0007": { "desc": "URANOTEST QUATTRO 10 pruebas", "price": 4836 },
             "DI0008": { "desc": "URANOTEST COPRO 10 pruebas.", "price": 2961 },
             "DI0009": { "desc": "URANOTEST DERMATOFITOS 4 test", "price": 2073 },
-            "E0006": { "desc": "PROTECTO JABON ANTIPULGAS", "price": 91 },
-            "E0007": { "desc": "PROTECTO POLVO ANTIPULGAS PET", "price": 158 },
-            "E0008": { "desc": "PROTECTO POLVO ANTIACAROS GALLO", "price": 151 },
             "E0009": { "desc": "PROTECTO FI SHAMPOO 250 ML", "price": 202 },
-            "E0013": { "desc": "PROTECTO M NRV 6 tabs.", "price": 361 },
-            "E0014": { "desc": "PROTECTO L NRV 6 tabs.", "price": 571 },
-            "E0015": { "desc": "PROTECTO XL NRV 6 tabs.", "price": 902 },
-            "E0018": { "desc": "PROTECTO FI L 2.70 ml pipeta.", "price": 327 },
-            "E0019": { "desc": "PROTECTO FI XL 4.50 ml pipeta.", "price": 331 },
             "E0020": { "desc": "PROTECTO MAX NRV S 1 tab", "price": 642 },
             "E0021": { "desc": "PROTECTO MAX NRV M 1 tab", "price": 749 },
             "E0022": { "desc": "PROTECTO MAX NRV L 1 tab", "price": 856 },
@@ -326,7 +307,6 @@
             "F0048": { "desc": "RANITI PET´S NRV SOLUCION ORAL", "price": 120 },
             "F0050": { "desc": "DERMA CREM NRV", "price": 135 },
             "F0051": { "desc": "CAL-PRIME MG NRV", "price": 273 },
-            "F0053": { "desc": "TERBINAFIN PET'S M 10 TABS", "price": 230 },
             "F0061": { "desc": "FUROSI JET NRV 20 ML", "price": 234 },
             "F0063": { "desc": "CISA PET`S NRV Suspension 40 ml", "price": 251 },
             "F0066": { "desc": "NET PET NRV 30 TABS", "price": 210 },
@@ -336,16 +316,13 @@
             "H0003": { "desc": "TYRO- PET´S 0.6 MG NRV 30 TAB", "price": 189 },
             "H0004": { "desc": "TYRO-PET´S 0.8 MG NRV 30 TAB", "price": 227 },
             "H0005": { "desc": "EXPUL-JET 20 NRV. 15 ml.", "price": 107 },
-            "H0006": { "desc": "EXPUL-JET 20 NRV. 100 ml.", "price": 226 },
             "H0007": { "desc": "EXPUL-JET 20 NRV. 250 ml.", "price": 435 },
             "H0008": { "desc": "SYNCRO-JET NRV. 20 ml.", "price": 621 },
             "H0009": { "desc": "SYNCRO-JET NRV. 50 ml.", "price": 1242 },
             "H0011": { "desc": "E-NRV 10 ml.", "price": 138 },
             "H0012": { "desc": "CARBETO-JET NRV 10 ml.", "price": 266 },
             "H0013": { "desc": "FERTY-JET NRV 50 ml.", "price": 1639 },
-            "H0015": { "desc": "TRILOSTANO 5mg NRV 30 tabs.", "price": 801 },
             "H0016": { "desc": "TRILOSTANO 10 mg NRV 30 tabs", "price": 1088 },
-            "H0017": { "desc": "TRILOSTANO 30mg NRV 30 tabs", "price": 1351 },
             "H0018": { "desc": "TRILOSTANO 60mg NRV 30 tabs", "price": 1671 },
             "I003": { "desc": "DERMATOPIC 50 mg. 30 ml.", "price": 1703 },
             "I004": { "desc": "DERMATOPIC 50 mg. 120 ml.", "price": 5720 },
@@ -353,80 +330,11 @@
             "I006": { "desc": "BROMO K Pets M 30 tabs", "price": 257 },
             "I007": { "desc": "BROMO K Pets L 30 tabs", "price": 342 },
             "I008": { "desc": "BROMO K Pets XL 30 tabs", "price": 749 },
-            "IE0001": { "desc": "CUÑA 3X5X8", "price": 1793 },
-            "IE0002": { "desc": "CUÑA 3X7X8", "price": 1793 },
-            "IE0003": { "desc": "CUÑA 4.5X11X13", "price": 1793 },
-            "IE0004": { "desc": "CUÑA 4.5X8X13", "price": 1793 },
-            "IE0005": { "desc": "CUÑA 6X14X20", "price": 2306 },
-            "IE0006": { "desc": "CUÑA 6X11X20", "price": 2306 },
-            "IE0007": { "desc": "CUÑA 7.5X17X22", "price": 2306 },
-            "IE0008": { "desc": "CUÑA 7.5X14X22", "price": 2306 },
-            "IE0009": { "desc": "CUÑA 9X20X26", "price": 2306 },
-            "IE0010": { "desc": "CUÑA 9X17X26", "price": 2306 },
-            "IE0011": { "desc": "CUÑA 9X14X26", "price": 2306 },
-            "IE0012": { "desc": "CUÑA 10.5X20X28", "price": 2306 },
-            "IE0013": { "desc": "CUÑA 10.5X17X28", "price": 2306 },
-            "IE0014": { "desc": "CUÑA12X20X30", "price": 2306 },
-            "IE0015": { "desc": "CUÑA 12X17X30", "price": 2306 },
-            "IE0016": { "desc": "CUÑA 13.5X23X33", "price": 2306 },
-            "IE0017": { "desc": "CUÑA 13.5X20X33", "price": 2306 },
-            "IE0018": { "desc": "PLACA 4R", "price": 704 },
-            "IE0019": { "desc": "PLACA 4M", "price": 704 },
-            "IE0020": { "desc": "PLACA 4L", "price": 704 },
-            "IE0021": { "desc": "PLACA 7S", "price": 704 },
-            "IE0022": { "desc": "PLACA 7M", "price": 704 },
-            "IE0023": { "desc": "PLACA 7L", "price": 704 },
-            "IE0024": { "desc": "PLACA 8S", "price": 704 },
-            "IE0025": { "desc": "PLACA 8L", "price": 704 },
-            "IE0026": { "desc": "TORNILLO TITANIO 1.5X6 MM", "price": 393 },
-            "IE0027": { "desc": "TORNILLO TITANIO 1.5X8 MM", "price": 393 },
-            "IE0028": { "desc": "TORNILLO TITANIO 1.5X10 MM", "price": 393 },
-            "IE0029": { "desc": "TORNILLO TITANIO 1.5X12 MM", "price": 393 },
-            "IE0030": { "desc": "TORNILLO TITANIO 1.5X14 MM", "price": 393 },
-            "IE0031": { "desc": "TORNILLO TITANIO 2X6 MM", "price": 354 },
-            "IE0032": { "desc": "TORNILLO TITANIO 2X8 MM", "price": 354 },
-            "IE0033": { "desc": "TORNILLO TITANIO 2X10 MM", "price": 354 },
-            "IE0034": { "desc": "TORNILLO TITANIO 2X12 MM", "price": 354 },
-            "IE0035": { "desc": "TORNILLO TITANIO 2X14 MM", "price": 354 },
-            "IE0036": { "desc": "TORNILLO TITANIO 2X16 MM", "price": 354 },
-            "IE0037": { "desc": "TORNILLO TITANIO 2.4X10 MM", "price": 354 },
-            "IE0038": { "desc": "TORNILLO TITANIO 2.4X12 MM", "price": 354 },
-            "IE0039": { "desc": "TORNILLO TITANIO 2.4X14 MM", "price": 354 },
-            "IE0040": { "desc": "TORNILLO TITANIO 2.4X16 MM", "price": 354 },
-            "IE0041": { "desc": "TORNILLO TITANIO 2.4X18 MM", "price": 354 },
-            "IE0042": { "desc": "TORNILLO TITANIO 2.4X20 MM", "price": 354 },
-            "IE0043": { "desc": "TORNILLO TITANIO 2.4X22 MM", "price": 354 },
-            "IE0044": { "desc": "TORNILLO TITANIO 2.4X24 MM", "price": 354 },
-            "IE0045": { "desc": "TORNILLO TITANIO 2.4X26 MM", "price": 354 },
-            "IE0046": { "desc": "TORNILLO TITANIO 2.4X28 MM", "price": 354 },
-            "IE0047": { "desc": "TORNILLO TITANIO 2.7X12 MM", "price": 393 },
-            "IE0048": { "desc": "TORNILLO TITANIO 2.7X14 MM", "price": 393 },
-            "IE0049": { "desc": "TORNILLO TITANIO 2.7X16 MM", "price": 393 },
-            "IE0050": { "desc": "TORNILLO TITANIO 2.7X18 MM", "price": 393 },
-            "IE0051": { "desc": "TORNILLO TITANIO 2.7X20 MM", "price": 393 },
-            "IE0052": { "desc": "TORNILLO TITANIO 2.7X22 MM", "price": 393 },
-            "IE0053": { "desc": "TORNILLO TITANIO 2.7X24 MM", "price": 393 },
-            "IE0054": { "desc": "TORNILLO TITANIO 2.7X26 MM", "price": 393 },
-            "IE0055": { "desc": "TORNILLO TITANIO 3.5X14 MM", "price": 434 },
-            "IE0056": { "desc": "TORNILLO TITANIO 3.5X16 MM", "price": 434 },
-            "IE0057": { "desc": "TORNILLO TITANIO 3.5X18 MM", "price": 434 },
-            "IE0058": { "desc": "TORNILLO TITANIO 3.5X20 MM", "price": 434 },
-            "IE0059": { "desc": "TORNILLO TITANIO 3.5X22 MM", "price": 434 },
-            "IE0060": { "desc": "TORNILLO TITANIO 3.5X24 MM", "price": 434 },
-            "IE0061": { "desc": "TORNILLO TITANIO 3.5X26 MM", "price": 434 },
-            "IE0062": { "desc": "TORNILLO TITANIO 3.5X28 MM", "price": 434 },
-            "IE0063": { "desc": "KIT CON 72 TORNILLOS,17 CUÑAS,16 PLACAS", "price": 69800 },
-            "IE0064": { "desc": "DISTRACTOR 10 CM", "price": 7428 },
-            "IE0067": { "desc": "GUIA DE CORTE", "price": 2562 },
-            "IE0068": { "desc": "DISTRACTOR 16 CM", "price": 7428 },
-            "IE0069": { "desc": "ESTUCHE PARA TTA 144mm x 128 mm", "price": 4482 },
             "N0001": { "desc": "NRV-4 Pasta 300 gr.", "price": 1208 },
             "N0003": { "desc": "LACTO PETS NRV 450 gr.", "price": 363 },
             "N0004": { "desc": "ALKARUMEN NRV 40 x 10 gr.", "price": 1283 },
             "O0004": { "desc": "OTIPETS NRV 100 ml.", "price": 143 },
             "O0006": { "desc": "OTIC - NRV 15 ml", "price": 181 },
-            "O0008": { "desc": "BRUNNE PET PERFUME 6 x 120 ml.", "price": 720 },
-            "O0010": { "desc": "ATRAYENTE NATURAL PETS EN SPRAY 125 ml.", "price": 190 },
             "O0012": { "desc": "REPELENTE CHUSCALE EN ATOMIZADOR 250 ml", "price": 322 },
             "OF0001": { "desc": "OFTI-JET UNGËNTO 7.5gr.", "price": 601 },
             "OF0002": { "desc": "OFTI - PETS GOTAS 5 ml.", "price": 393 },
@@ -436,7 +344,6 @@
             "OF0006": { "desc": "PREDNI PET´S NRV oftalmico", "price": 158 },
             "OF0008": { "desc": "LUBRI - PET´S NRV Solución Oftalmica 10 ml.", "price": 158 },
             "OF0009": { "desc": "LUBRI - PETS UNGÜENTO 7.5 gr.", "price": 158 },
-            "OF0012": { "desc": "CIPRO PETS PLUS 10 ml", "price": 606 },
             "OF0014": { "desc": "CONDRO PETS LAGRIMA 10 ml", "price": 315 },
             "OF0015": { "desc": "TOBRA PETS PLUS 10 ml", "price": 560 },
             "S0002": { "desc": "OSO PETS NRV 250 ml.", "price": 151 },
@@ -445,7 +352,6 @@
             "S0011": { "desc": "FUNGI-PETS DRY NRV 250 ml.", "price": 315 },
             "S0012": { "desc": "PEROXIBEN PETS NRV 237 ml.", "price": 242 },
             "S0013": { "desc": "SARNIPETS NRV 250 ml.", "price": 242 },
-            "S0016": { "desc": "NRV SHAMPOO 250 ml.", "price": 200 },
             "V0002": { "desc": "SEL + E NRV 100 ml.", "price": 366 },
             "V0003": { "desc": "SEL + E NRV 250 ml.", "price": 778 },
             "V0005": { "desc": "ENER-JET ADE NRV. 100 ml.", "price": 284 },
@@ -477,127 +383,115 @@
 
         let decodedOrder = [];
 
-        function base64Decode(str) {
-            try {
-                // Decodifica Base64 a string binaria, luego a UTF-8
-                return decodeURIComponent(atob(str).split('').map(function(c) {
-                    return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-                }).join(''));
-            } catch (e) {
-                return null;
-            }
-        }
-
-        function decodeAndProcess() {
-            const message = document.getElementById('whatsapp-message').value;
-            const statusDiv = document.getElementById('status-message');
-            const tableBody = document.getElementById('order-table-body');
-            const downloadButton = document.getElementById('download-button');
+        // Función de utilidad para decodificar una línea de texto de pedido.
+        function decodeLine(line) {
+            const regex = /([a-zA-Z]{1}\d{4}[a-zA-Z]*)\s?x\s?(\d+)/i;
+            const match = line.match(regex);
             
-            statusDiv.className = 'mt-3 text-sm font-semibold';
-            statusDiv.textContent = 'Buscando código de pedido...';
-            downloadButton.disabled = true;
-            tableBody.innerHTML = '';
-            decodedOrder = [];
-
-            // 1. Buscar el código codificado
-            const regex = /\[PEDIDO_INICIO\](.*?)\[PEDIDO_FIN\]/s;
-            const match = message.match(regex);
-
-            if (!match) {
-                statusDiv.textContent = 'Error: No se encontró el código [PEDIDO_INICIO]...[PEDIDO_FIN] en el mensaje.';
-                statusDiv.classList.add('error-message');
-                tableBody.innerHTML = '<tr id="initial-row"><td colspan="4" class="px-6 py-4 text-sm text-gray-500 text-center">Error al procesar el mensaje. Verifique el formato.</td></tr>';
-                return;
-            }
-
-            const base64Payload = match[1].trim();
-            statusDiv.textContent = 'Código Base64 encontrado. Decodificando...';
-
-            // 2. Decodificar Base64
-            const jsonString = base64Decode(base64Payload);
-
-            if (!jsonString) {
-                statusDiv.textContent = 'Error: Falló la decodificación Base64. El código es inválido.';
-                statusDiv.classList.add('error-message');
-                tableBody.innerHTML = '<tr id="initial-row"><td colspan="4" class="px-6 py-4 text-sm text-gray-500 text-center">Error al decodificar.</td></tr>';
-                return;
-            }
-
-            // 3. Parsear JSON
-            try {
-                const parsedData = JSON.parse(jsonString);
-
-                if (!Array.isArray(parsedData) || parsedData.length === 0) {
-                    statusDiv.textContent = 'Error: El JSON decodificado está vacío o no es un formato válido de pedido.';
-                    statusDiv.classList.add('error-message');
-                    tableBody.innerHTML = '<tr id="initial-row"><td colspan="4" class="px-6 py-4 text-sm text-gray-500 text-center">Pedido decodificado vacío.</td></tr>';
-                    return;
-                }
-
-                // 4. Procesar y Validar Pedido
-                decodedOrder = parsedData.map(item => {
-                    const sku = item.s;
-                    const quantity = item.q;
-                    const productInfo = CATALOGO[sku];
-
-                    const validation = productInfo ? 'OK' : 'SKU No Encontrado';
-                    const description = productInfo ? productInfo.desc : 'N/A';
-                    
+            if (match) {
+                const sku = match[1].toUpperCase();
+                const quantity = parseInt(match[2], 10);
+                
+                // Buscar en el catálogo
+                const productInfo = CATALOGO[sku];
+                
+                if (productInfo) {
                     return {
                         sku: sku,
                         quantity: quantity,
-                        description: description,
-                        validation: validation,
-                        price: productInfo ? productInfo.price : 0
+                        price: productInfo.price,
+                        desc: productInfo.desc,
+                        validation: "✅ OK"
                     };
-                });
+                } else {
+                    return {
+                        sku: sku,
+                        quantity: quantity,
+                        price: 0,
+                        desc: "SKU NO ENCONTRADO",
+                        validation: "⚠️ ERROR: SKU Desconocido"
+                    };
+                }
+            }
+            return null; // Línea que no coincide con el formato
+        }
 
-                // 5. Renderizar Tabla
-                renderOrderTable(decodedOrder);
+        // Función principal de procesamiento
+        function decodeAndProcess() {
+            const message = document.getElementById('whatsapp-message').value;
+            const lines = message.split('\n');
+            decodedOrder = [];
+            let foundProducts = false;
 
-                statusDiv.textContent = `¡Pedido decodificado exitosamente! ${decodedOrder.length} líneas de producto encontradas.`;
-                statusDiv.classList.remove('error-message');
-                statusDiv.classList.add('text-green-600');
-                downloadButton.disabled = false;
+            lines.forEach(line => {
+                const trimmedLine = line.trim();
+                if (trimmedLine) {
+                    const item = decodeLine(trimmedLine);
+                    if (item) {
+                        decodedOrder.push(item);
+                        foundProducts = true;
+                    }
+                }
+            });
 
-            } catch (e) {
-                statusDiv.textContent = 'Error: El JSON decodificado es inválido.';
-                statusDiv.classList.add('error-message');
-                tableBody.innerHTML = '<tr id="initial-row"><td colspan="4" class="px-6 py-4 text-sm text-gray-500 text-center">Error en el formato JSON del pedido.</td></tr>';
+            renderOrderTable();
+
+            const statusMessage = document.getElementById('status-message');
+            const downloadButton = document.getElementById('download-button');
+
+            if (foundProducts) {
+                const errors = decodedOrder.filter(item => item.validation.includes('ERROR'));
+                if (errors.length > 0) {
+                    statusMessage.className = 'mt-3 text-sm font-semibold error-message';
+                    statusMessage.textContent = `Decodificación completada con ${errors.length} errores. ¡Revisar la tabla!`;
+                    downloadButton.disabled = true;
+                } else {
+                    statusMessage.className = 'mt-3 text-sm font-semibold text-green-600';
+                    statusMessage.textContent = 'Decodificación exitosa. Pedido listo para su validación.';
+                    downloadButton.disabled = false;
+                }
+            } else {
+                statusMessage.className = 'mt-3 text-sm font-semibold text-gray-500';
+                statusMessage.textContent = 'No se encontraron códigos de producto en el mensaje.';
+                downloadButton.disabled = true;
             }
         }
 
-        function renderOrderTable(order) {
+        // Función para renderizar la tabla HTML
+        function renderOrderTable() {
             const tableBody = document.getElementById('order-table-body');
-            tableBody.innerHTML = ''; // Limpiar tabla
+            tableBody.innerHTML = ''; // Limpiar la tabla
 
-            order.forEach(item => {
+            if (decodedOrder.length === 0) {
+                tableBody.innerHTML = '<tr id="initial-row"><td colspan="4" class="px-6 py-4 text-sm text-gray-500 text-center">Aún no hay un pedido decodificado.</td></tr>';
+                return;
+            }
+
+            decodedOrder.forEach(item => {
                 const row = document.createElement('tr');
-                const validationClass = item.validation === 'OK' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800';
+                const validationColor = item.validation.includes('ERROR') ? 'text-red-600 font-bold' : 'text-green-600';
 
                 row.innerHTML = `
                     <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">${item.sku}</td>
-                    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">${item.description}</td>
+                    <td class="whitespace-normal px-3 py-4 text-sm text-gray-500">${item.desc} ($${item.price.toFixed(2)})</td>
                     <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">${item.quantity}</td>
-                    <td class="whitespace-nowrap px-3 py-4 text-sm">
-                        <span class="inline-flex rounded-full px-2 text-xs font-semibold leading-5 ${validationClass}">
-                            ${item.validation}
-                        </span>
-                    </td>
+                    <td class="whitespace-nowrap px-3 py-4 text-sm ${validationColor}">${item.validation}</td>
                 `;
                 tableBody.appendChild(row);
             });
         }
 
+        // Función para descargar el archivo CSV
         function downloadCSV() {
             if (decodedOrder.length === 0) {
-                alert("No hay pedido para descargar.");
+                alert("No hay un pedido decodificado para descargar.");
                 return;
             }
 
-            const clientName = document.getElementById('client-name').value.trim() || 'SIN_ASIGNAR';
-            const headers = ["ID_CLIENTE", "SKU", "CANTIDAD", "PRECIO_UNITARIO", "ESTADO_VALIDACION"];
+            const clientName = document.getElementById('client-name').value.trim() || 'CLIENTE_DESCONOCIDO';
+            
+            // Columnas requeridas para el sistema de importación
+            const headers = ["CLIENTE", "CODIGO", "CANTIDAD", "PRECIO_UNITARIO", "VALIDACION"];
             
             // Reemplaza comas y saltos de línea en el nombre del cliente para evitar problemas en el CSV
             const safeClientName = clientName.replace(/,/g, '').replace(/\n/g, ' ');
@@ -610,7 +504,7 @@
                     item.sku,
                     item.quantity,
                     item.price.toFixed(2), // Formato de precio con 2 decimales
-                    item.validation
+                    item.validation.replace(/,/g, '') // Asegurar que el campo de validación no tenga comas
                 ];
                 csvContent += row.join(",") + "\n";
             });
@@ -623,7 +517,9 @@
             
             const now = new Date();
             const dateStr = now.toISOString().slice(0, 10).replace(/-/g, ''); // YYYYMMDD
-            link.setAttribute('download', `Pedido_${dateStr}_${safeClientName.substring(0, 15).replace(/\s/g, '_')}.csv`);
+            // Crea un nombre de archivo seguro
+            const safeFilenamePart = safeClientName.substring(0, 15).replace(/\s/g, '_').replace(/[^a-zA-Z0-9_]/g, '');
+            link.setAttribute('download', `Pedido_${dateStr}_${safeFilenamePart}.csv`);
             
             document.body.appendChild(link);
             link.click();
@@ -635,3 +531,4 @@
 
 </body>
 </html>
+```
