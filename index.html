@@ -1,41 +1,76 @@
-<!DOCTYPE html>
+HTML<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Catálogo NORVET 2025 - Pedidos Rápidos</title>
+    <title>App de Pedidos NORVET 2025</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        .container { max-width: 600px; margin: 0 auto; padding: 10px; }
-        .product-card { border-bottom: 1px solid #e5e7eb; padding: 15px 0; }
-        .quantity-input { width: 70px; text-align: center; }
-        #cart-summary { position: fixed; bottom: 60px; left: 0; right: 0; background-color: white; padding: 10px; box-shadow: 0 -2px 4px rgba(0,0,0,0.1); z-index: 10; }
+        body { font-family: system-ui, sans-serif; }
+        #cart-panel { transform: translateX(100%); transition: transform 0.3s ease-in-out; }
+        #cart-panel.open { transform: translateX(0); }
+        #cart-badge { @apply absolute -top-2 -right-2 bg-red-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center; }
     </style>
 </head>
-<body class="bg-gray-100">
-    <div class="container">
-        <header class="sticky top-0 bg-white p-4 shadow-md z-10">
-            <h1 class="text-2xl font-bold text-indigo-700">Catálogo NORVET 2025</h1>
-            <p class="text-sm text-gray-500">Busca productos y agrégalos al carrito.</p>
-            <input type="text" id="search-input" placeholder="Busca por SKU o descripción..." class="mt-2 w-full p-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500">
-        </header>
-        <main id="product-list" class="mt-4">
-            <div class="text-center py-10 text-gray-500">Cargando catálogo...</div>
-        </main>
-        <div id="cart-summary" class="hidden">
-            <div class="flex justify-between items-center">
-                <span class="font-bold">Total: $<span id="cart-total">0.00</span></span>
-                <button onclick="generateOrder()" class="px-4 py-2 text-white bg-green-600 rounded-md hover:bg-green-700">Generar Pedido</button>
-            </div>
-        </div>
-        <footer class="fixed bottom-0 left-0 right-0 bg-white p-4 shadow-xl border-t border-gray-200">
-            <button onclick="generateOrder()" class="w-full inline-flex items-center justify-center px-4 py-3 border border-transparent text-base font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
-                Generar Pedido (WhatsApp)
-            </button>
-        </footer>
+<body class="bg-gray-100 min-h-screen">
+
+    <!-- Contenido principal -->
+    <div class="container max-w-lg mx-auto p-4 pb-20">
+        <h1 class="text-3xl font-bold text-indigo-700 text-center my-6">App de Pedidos NORVET 2025</h1>
+
+        <!-- Buscador -->
+        <input type="text" id="search" placeholder="Buscar por código o producto..." 
+               class="w-full p-4 rounded-xl border border-gray-300 focus:ring-4 focus:ring-indigo-300 text-lg mb-4">
+
+        <!-- Lista de productos -->
+        <div id="products" class="space-y-3"></div>
     </div>
+
+    <!-- Botón flotante del carrito -->
+    <button id="cart-btn" class="fixed bottom-6 right-6 bg-indigo-600 text-white p-5 rounded-full shadow-2xl z- hover:bg-indigo-700 z-40">
+        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+        <span id="cart-badge" class="hidden">0</span>
+    </button>
+
+    <!-- Panel del carrito (deslizante) -->
+    <div id="cart-panel" class="fixed inset-y-0 right-0 w-full max-w-md bg-white shadow-2xl z-50 flex flex-col">
+        <div class="bg-indigo-700 text-white p-4 flex justify-between items-center">
+            <h2 class="text-2xl font-bold">Tu Pedido</h2>
+            <button id="close-cart" class="text-3xl">&times;</button>
+        </div>
+
+        <div class="p-4 flex-1 overflow-y-auto">
+            <!-- Nombre del cliente -->
+            <input type="text" id="client-name" placeholder="Nombre del cliente o farmacia *" 
+                   class="w-full p-3 border rounded-lg mb-4 text-lg" required>
+
+            <!-- Fecha automática -->
+            <p class="text-sm text-gray-600 mb-4">
+                <strong>Fecha:</strong> <span id="order-date"></span>
+            </p>
+
+            <!-- Lista del carrito -->
+            <div id="cart-items" class="space-y-3 mb-6"></div>
+
+            <!-- Observaciones -->
+            <textarea id="observations" placeholder="Observaciones (opcional): urgente, factura, envío, etc." 
+                      class="w-full p-3 border rounded-lg h-24 resize-none"></textarea>
+        </div>
+
+        <!-- Total y botón enviar -->
+        <div class="border-t p-4 bg-gray-50">
+            <div class="flex justify-between text-2xl font-bold mb-4">
+                <span>Total:</span>
+                <span id="total-display" class="text-indigo-700">$0.00</span>
+            </div>
+            <button id="send-order" class="w-full bg-green-600 text-white font-bold py-4 rounded-xl text-xl hover:bg-green-700">
+                Enviar Pedido por WhatsApp
+            </button>
+        </div>
+    </div>
+
     <script>
-        // Catálogo COMPLETO y VERIFICADO del Excel oficial (308 productos)
+        // === CATÁLOGO COMPLETO OFICIAL 2025 (308 productos) ===
         const CATALOGO = {
             "A0003": { "desc": "CEFTRIA-PETS 50 mg NRV 10 ml.", "price": 142 },
             "A0004": { "desc": "CEFTRIA-JET 75 mg NRV 20 ml.", "price": 205 },
@@ -344,108 +379,108 @@
             "V0043": { "desc": "VITANEGRA NRV PREMIUM 50 ML", "price": 219 },
             "V0044": { "desc": "VITANEGRA NRV PREMIUM 100 ML", "price": 348 },
             "V0045": { "desc": "VITANEGRA NRV PREMIUM 250 ML", "price": 852 }
-        }; 
-    
+        };let carrito = {};
 
-        let cart = {}; // Carrito: {sku: quantity}
+        // Fecha automática
+        document.getElementById('order-date').textContent = new Date().toLocaleString('es-MX');
 
-        // Función para renderizar el listado de productos (con búsqueda)
-        function renderProductList(searchTerm = '') {
-            const productList = document.getElementById('product-list');
-            productList.innerHTML = ''; // Limpiar contenido
-            const sortedSKUs = Object.keys(CATALOGO).sort();
-            let count = 0;
-            sortedSKUs.forEach(sku => {
-                const product = CATALOGO[sku];
-                const lowerSearch = searchTerm.toLowerCase();
-                if (sku.toLowerCase().includes(lowerSearch) || product.desc.toLowerCase().includes(lowerSearch)) {
-                    count++;
-                    const card = document.createElement('div');
-                    card.className = 'product-card bg-white hover:bg-gray-50 transition duration-150 ease-in-out';
-                    card.innerHTML = `
-                        <div class="flex justify-between items-center">
-                            <div class="flex-1 min-w-0 pr-2">
-                                <h3 class="text-sm font-semibold text-gray-900">${product.desc}</h3>
-                                <p class="text-xs text-indigo-600 font-medium">SKU: ${sku}</p>
-                                <p class="text-sm text-gray-500 mt-1">Precio: $${product.price.toFixed(2)}</p>
-                            </div>
-                            <div class="flex-shrink-0">
-                                <input
-                                    type="number"
-                                    min="0"
-                                    value="${cart[sku] || 0}"
-                                    data-sku="${sku}"
-                                    onchange="updateCart(this)"
-                                    class="quantity-input border border-gray-300 rounded-md p-2 text-sm focus:ring-indigo-500 focus:border-indigo-500"
-                                />
-                            </div>
+        // Renderizar productos
+        function render() {
+            const container = document.getElementById('products');
+            container.innerHTML = '';
+            const term = document.getElementById('search').value.toLowerCase();
+            Object.keys(CATALOGO).sort().forEach(sku => {
+                const p = CATALOGO[sku];
+                if (sku.toLowerCase().includes(term) || p.desc.toLowerCase().includes(term)) {
+                    const div = document.createElement('div');
+                    div.className = 'bg-white rounded-xl shadow p-4 flex justify-between items-center';
+                    div.innerHTML = `
+                        <div>
+                            <div class="font-bold">${p.desc}</div>
+                            <div class="text-sm text-gray-600">${sku} • $${p.price}</div>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <button onclick="add('${sku}', -1)" class="w-10 h-10 bg-red-100 rounded-full">-</button>
+                            <span class="font-bold text-xl w-12 text-center">${carrito[sku]||0}</span>
+                            <button onclick="add('${sku}', 1)" class="w-10 h-10 bg-green-100 rounded-full">+</button>
                         </div>
                     `;
-                    productList.appendChild(card);
+                    container.appendChild(div);
                 }
             });
-            if (count === 0) {
-                productList.innerHTML = '<div class="text-center py-10 text-gray-500">No se encontraron productos. Intenta con otro término.</div>';
-            }
-            updateCartTotal();
+            updateCart();
         }
 
-        // Resto del script igual al anterior (updateCart, updateCartTotal, generateOrder)...
-        function updateCart(input) {
-            const sku = input.dataset.sku;
-            const quantity = parseInt(input.value) || 0;
-            if (quantity > 0) {
-                cart[sku] = quantity;
-            } else {
-                delete cart[sku];
-            }
-            updateCartTotal();
+        // Actualizar carrito y total
+        function add(sku, delta) {
+            const qty = (carrito[sku] || 0) + delta;
+            if (qty <= 0) delete carrito[sku];
+            else carrito[sku] = qty;
+            render();
         }
 
-        function updateCartTotal() {
+        function updateCart() {
+            const count = Object.values(carrito).reduce((a,b)=>a+b,0);
+            document.getElementById('cart-badge').textContent = count;
+            document.getElementById('cart-badge').classList.toggle('hidden', count===0);
+
             let total = 0;
-            Object.keys(cart).forEach(sku => {
-                total += CATALOGO[sku].price * cart[sku];
+            const itemsDiv = document.getElementById('cart-items');
+            itemsDiv.innerHTML = '';
+            Object.keys(carrito).forEach(sku => {
+                const p = CATALOGO[sku];
+                const subtotal = carrito[sku] * p.price;
+                total += subtotal;
+                itemsDiv.innerHTML += `
+                    <div class="flex justify-between items-center py-2 border-b">
+                        <div>
+                            <div class="font-medium">${carrito[sku]}x ${p.desc}</div>
+                            <div class="text-sm text-gray-600">${sku}</div>
+                        </div>
+                        <div class="font-bold">$ ${subtotal}</div>
+                    </div>
+                `;
             });
-            document.getElementById('cart-total').textContent = total.toFixed(2);
-            const summary = document.getElementById('cart-summary');
-            if (total > 0) {
-                summary.classList.remove('hidden');
-            } else {
-                summary.classList.add('hidden');
-            }
+            document.getElementById('total-display').textContent = total.toLocaleString('es-MX', {style:'currency', currency:'MXN'});
         }
 
-        function generateOrder() {
-    let orderLines = [];
-    Object.keys(cart).forEach(sku => {
-        const quantity = cart[sku];
-        const producto = CATALOGO[sku];
-        // Ahora incluye código, cantidad y descripción completa
-        orderLines.push(`${sku} x ${quantity} - ${producto.desc}`);
-    });
+        // Enviar por WhatsApp
+        document.getElementById('send-order').addEventListener('click', () => {
+            const cliente = document.getElementById('client-name').value.trim();
+            if (!cliente) return alert("Por favor escribe el nombre del cliente");
+            if (Object.keys(carrito).length === 0) return alert("El carrito está vacío");
 
-    if (orderLines.length === 0) {
-        alert("El carrito está vacío. Agrega productos antes de tu pedido.");
-        return;
-    }
+            let lineas = Object.keys(carrito).map(sku => 
+                `${sku} x ${carrito[sku]} - ${CATALOGO[sku].desc}`
+            );
 
-    const header = "*¡NUEVO PEDIDO NORVET!* \n\n";
-    const body = orderLines.join('\n');
-    const total = Object.keys(cart).reduce((sum, sku) => sum + cart[sku] * CATALOGO[sku].price, 0);
-    const footer = `\n\n*Total: $${total.toFixed(2)}*\n\n—\nEnviado desde la App NORVET`;
+            const obs = document.getElementById('observations').value.trim();
+            const total = document.getElementById('total-display').textContent;
 
-    const mensajeFinal = header + body + footer;
-    const url = `https://wa.me/?text=${encodeURIComponent(mensajeFinal)}`;
-    window.open(url, '_blank');
-}
-        // Inicializar la aplicación
-        document.addEventListener('DOMContentLoaded', renderProductList);
+            const mensaje = `*NUEVO PEDIDO NORVET 2025*%0A%0A` +
+                `*Cliente:* ${cliente}%0A` +
+                `*Fecha:* ${new Date().toLocaleString('es-MX')}%0A%0A` +
+                lineas.join('%0A') + `%0A%0A` +
+                (obs ? `*Observaciones:* ${obs}%0A%0A` : '') +
+                `*Total:* ${total}%0A%0A` +
+                `—%0AEnviado desde la App de Pedidos NORVET`;
 
-        // Motor de búsqueda
-        document.getElementById('search-input').addEventListener('input', (e) => {
-            renderProductList(e.target.value);
+            window.open(`https://wa.me/?text=${mensaje}`, '_blank');
         });
+
+        // Abrir/cerrar panel carrito
+        document.getElementById('cart-btn').addEventListener('click', () => {
+            document.getElementById('cart-panel').classList.add('open');
+        });
+        document.getElementById('close-cart').addEventListener('click', () => {
+            document.getElementById('cart-panel').classList.remove('open');
+        });
+
+        // Búsqueda en tiempo real
+        document.getElementById('search').addEventListener('input', render);
+
+        // Iniciar
+        render();
     </script>
 </body>
 </html>
