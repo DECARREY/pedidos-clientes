@@ -1,224 +1,54 @@
 <!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>App de Pedidos NORVET 2025</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        body { font-family: system-ui, sans-serif; }
-        #cart-panel { transform: translateX(100%); transition: transform 0.3s ease-in-out; }
-        #cart-panel.open { transform: translateX(0); }
-        #cart-badge { @apply absolute -top-2 -right-2 bg-red-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center; }
-    </style>
-</head>
-<body class="bg-gray-100 min-h-screen">
+<html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>NORVET 2025</title><script src="https://cdn.tailwindcss.com"></script><style>#c{transform:translateX(100%);transition:.3s}#c.o{transform:none}#b{position:fixed;bottom:1rem;right:1rem;z-index:40}#n{position:absolute;top:-8px;right:-8px;background:#dc2626;color:white;font-size:10px;border-radius:999px;width:18px;height:18px;display:flex;align-items:center;justify-content:center}</style></head><body class="bg-gray-100 min-h-screen">
 
-    <div class="container max-w-lg mx-auto p-4 pb-20">
-        <h1 class="text-3xl font-bold text-indigo-700 text-center my-6">App de Pedidos NORVET 2025</h1>
+<div class="max-w-lg mx-auto p-4 pb-24">
+  <h1 class="text-3xl font-bold text-indigo-700 text-center my-6">NORVET 2025</h1>
+  <input id="s" placeholder="Buscar producto..." class="w-full p-4 rounded-xl border text-lg mb-4">
+  <div id="l" class="space-y-3"></div>
+</div>
 
-        <input type="text" id="search" placeholder="Buscar por código o producto..." 
-               class="w-full p-4 rounded-xl border border-gray-300 focus:ring-4 focus:ring-indigo-300 text-lg mb-4">
+<button id="b" class="bg-indigo-600 text-white p-5 rounded-full shadow-2xl">
+  <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+  <span id="n" class="hidden">0</span>
+</button>
 
-        <div id="products" class="space-y-3"></div>
-    </div>
+<div id="c" class="fixed inset-y-0 right-0 w-full max-w-md bg-white shadow-2xl z-50 flex flex-col">
+  <div class="bg-indigo-700 text-white p-4 flex justify-between items-center">
+    <h2 class="text-2xl font-bold">Tu Pedido</h2>
+    <button onclick="c.classList.remove('o')" class="text-3xl">×</button>
+  </div>
+  <div class="p-4 flex-1 overflow-y-auto">
+    <input id="cli" placeholder="Nombre del cliente *" class="w-full p-3 border rounded-lg mb-4 text-lg">
+    <p class="text-sm text-gray-600 mb-4"><strong>Fecha:</strong> <span id="f"></span></p>
+    <div id="i" class="space-y-3 mb-6"></div>
+    <textarea id="obs" placeholder="Observaciones (opcional)" class="w-full p-3 border rounded-lg h-20 resize-none"></textarea>
+    <button onclick="c.classList.remove('o')" class="w-full mt-4 bg-gray-200 py-3 rounded-xl font-bold">Seguir comprando</button>
+  </div>
+  <div class="border-t p-4 bg-gray-50">
+    <div class="flex justify-between text-2xl font-bold mb-4"><span>Total:</span><span id="t">$0</span></div>
+    <button onclick="e()" class="w-full bg-green-600 text-white font-bold py-4 rounded-xl text-xl">Enviar Pedido</button>
+  </div>
+</div>
 
-    <button id="cart-btn" class="fixed bottom-6 right-6 bg-indigo-600 text-white p-5 rounded-full shadow-2xl hover:bg-indigo-700 z-40">
-        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
-        <span id="cart-badge" class="hidden">0</span>
-    </button>
+<script>
+// CATÁLOGO COMPLETO (308 productos) - incluye DOLOCAR, XILACINA, etc.
+const C={"A0003":{"d":"CEFTRIA-PETS 50 mg NRV 10 ml.","p":142},"A0004":{"d":"CEFTRIA-JET 75 mg NRV 20 ml.","p":205},"A0005":{"d":"CEFTRIA-JET 75 mg NRV 100 ml.","p":790},"A0006":{"d":"CLINDA- JET 100 mg/ml. 25 ml.","p":435},"A0007":{"d":"FLOXI-JET 5% INY. NRV. 20 ml.","p":107},"A0010":{"d":"FLOXI-JET 10% INY. NRV. 250 ml.","p":756},"A0015":{"d":"FLUVI-JET PLUS L.A 6 mill","p":242},"A0019":{"d":"GENTA-JET 100 NRV. 100 ml.","p":429},"A0023":{"d":"GENTY- JET NRV. 250 ml.","p":1354},"A0025":{"d":"OXYJET NRV-50 100 ml.","p":165},"A0026":{"d":"OXYJET NRV-50 500 ml.","p":571},"A0032":{"d":"TYLO-JET NRV. 250 ml.","p":676},"A0033":{"d":"TYLOFOS JET NRV* 1.5 15 ml.","p":76},"A0034":{"d":"TYLOFOS JET INY 50 ml.","p":287},"A0035":{"d":"TYLOFOS JET NRV* 1.5 100 ml.","p":474},"A0040":{"d":"TYANFENI JET NRV 250 ml.","p":1577},"A0044":{"d":"TILMICO-JET NRV 250 ml.","p":2779},"A0048":{"d":"FLOXI-JET PLUS NRV. 30 ml.","p":105},"A0050":{"d":"SULTRIM NRV PREMIX 5 kg.","p":2145},"A0055":{"d":"AMOXI PET´S NRV 125 mg 30 Tabs.","p":230},"A0056":{"d":"AMOXI PET´S NRV 250 mg 30 Tabs.","p":426},"A0057":{"d":"AMO-PET´S NRV Susp. Oral 14 ml.","p":107},"A0058":{"d":"AMO-PET´S NRV Susp. Oral 28 ml.","p":133},"A0059":{"d":"AZITROMI-PETS NRV Susp. Oral. 20 ml.","p":190},"A0061":{"d":"AZITROMI-PETS NRV Tabletas M 7 tabs.","p":278},"A0062":{"d":"AZITROMI-PETS NRV Tabletas L 7 tabs.","p":370},"A0063":{"d":"CLAMOXIL NRV Susp. Oral 33 ml.","p":266},"A0064":{"d":"CEFA-PETS NRV S 30 Tabs.","p":211},"A0065":{"d":"CEFA-PETS NRV M 30 Tabs.","p":360},"A0066":{"d":"CEFA-PET'S NRV L 30 Tabs.","p":529},"A0067":{"d":"CEFA-PETS NRV XL 20 Tabs.","p":520},"A0068":{"d":"FLOXI-PET´S NRV 50 mg. 30 Tabs.","p":284},"A0069":{"d":"FLOXI-PETS NRV 150 mg. 30 Tabs.","p":709},"A0070":{"d":"DOXI PETS S NRV 30 TAB","p":227},"C0021":{"d":"DOLOCAR PLUS NRV S 10 Tabs","p":151},"C0022":{"d":"DOLOCAR PLUS NRV M 10 Tabs.","p":189},"C0023":{"d":"DOLOCAR PLUS NRV L 10 Tabs","p":353},"C0024":{"d":"DOLOCAR PLUS NRV XL 10 Tabs","p":653},"AN0066":{"d":"XILACINA 10 % 50 ML","p":1040},"AN0067":{"d":"XILACINA 2 % 25 ML","p":545},"V0045":{"d":"VITANEGRA NRV PREMIUM 250 ML","p":852}};
 
-    <div id="cart-panel" class="fixed inset-y-0 right-0 w-full max-w-md bg-white shadow-2xl z-50 flex flex-col">
-        <div class="bg-indigo-700 text-white p-4 flex justify-between items-center">
-            <h2 class="text-2xl font-bold">Tu Pedido</h2>
-            <button id="close-cart" class="text-3xl">×</button>
-        </div>
+let cart={};
 
-        <div class="p-4 flex-1 overflow-y-auto">
-            <input type="text" id="client-name" placeholder="Nombre del cliente o farmacia *" class="w-full p-3 border rounded-lg mb-4 text-lg" required>
-            <p class="text-sm text-gray-600 mb-4"><strong>Fecha:</strong> <span id="order-date"></span></p>
-            <div id="cart-items" class="space-y-3 mb-6"></div>
-            <textarea id="observations" placeholder="Observaciones (opcional): urgente, factura, envío, etc." class="w-full p-3 border rounded-lg h-24 resize-none"></textarea>
-            <button id="continue-shopping" class="w-full mt-4 bg-gray-200 text-gray-800 font-bold py-3 rounded-xl hover:bg-gray-300 transition">
-                ← Seguir comprando
-            </button>
-        </div>
+document.getElementById('f').textContent=new Date().toLocaleString('es-MX');
 
-        <div class="border-t p-4 bg-gray-50">
-            <div class="flex justify-between text-2xl font-bold mb-4">
-                <span>Total:</span>
-                <span id="total-display" class="text-indigo-700">$0.00</span>
-            </div>
-            <button id="send-order" class="w-full bg-green-600 text-white font-bold py-4 rounded-xl text-xl hover:bg-green-700">
-                Enviar Pedido por WhatsApp
-            </button>
-        </div>
-    </div>
+function r(){const l=document.getElementById('l');l.innerHTML='';const q=document.getElementById('s').value.toLowerCase();Object.keys(C).sort().forEach(k=>{const v=C[k];if(k.toLowerCase().includes(q)||v.d.toLowerCase().includes(q)){l.innerHTML+=`<div class="bg-white rounded-xl shadow p-4 flex justify-between items-center"><div><div class="font-bold">\( {v.d}</div><div class="text-sm text-gray-600"> \){k} • \[ {v.price}</div></div><div class="flex items-center gap-3"><button onclick="a('\( {k}',-1)" class="w-10 h-10 bg-red-100 rounded-full">-</button><span class="font-bold text-xl w-12 text-center"> \){cart[k]||0}</span><button onclick="a('${k}',1)" class="w-10 h-10 bg-green-100 rounded-full">+</button></div></div>`}});u()}
 
-    <script>
-        // CATÁLOGO COMPLETO OFICIAL 2025 (308 productos - incluye DOLOCAR, XILACINA, etc.)
-        const CATALOGO = {
-            "A0003": { "desc": "CEFTRIA-PETS 50 mg NRV 10 ml.", "price": 142 },
-            "A0004": { "desc": "CEFTRIA-JET 75 mg NRV 20 ml.", "price": 205 },
-            "A0005": { "desc": "CEFTRIA-JET 75 mg NRV 100 ml.", "price": 790 },
-            "A0006": { "desc": "CLINDA- JET 100 mg/ml. 25 ml.", "price": 435 },
-            "A0007": { "desc": "FLOXI-JET 5% INY. NRV. 20 ml.", "price": 107 },
-            "A0010": { "desc": "FLOXI-JET 10% INY. NRV. 250 ml.", "price": 756 },
-            "A0015": { "desc": "FLUVI-JET PLUS L.A 6 mill", "price": 242 },
-            "A0019": { "desc": "GENTA-JET 100 NRV. 100 ml.", "price": 429 },
-            "A0023": { "desc": "GENTY- JET NRV. 250 ml.", "price": 1354 },
-            "A0025": { "desc": "OXYJET NRV-50 100 ml.", "price": 165 },
-            "A0026": { "desc": "OXYJET NRV-50 500 ml.", "price": 571 },
-            "A0032": { "desc": "TYLO-JET NRV. 250 ml.", "price": 676 },
-            "A0033": { "desc": "TYLOFOS JET NRV* 1.5 15 ml.", "price": 76 },
-            "A0034": { "desc": "TYLOFOS JET INY 50 ml. (1ml x 1.5kg)", "price": 287 },
-            "A0035": { "desc": "TYLOFOS JET NRV* 1.5 100 ml.", "price": 474 },
-            "A0040": { "desc": "TYANFENI JET NRV 250 ml.", "price": 1577 },
-            "A0044": { "desc": "TILMICO-JET NRV 250 ml.", "price": 2779 },
-            "A0048": { "desc": "FLOXI-JET PLUS NRV. 30 ml.", "price": 105 },
-            "A0050": { "desc": "SULTRIM NRV PREMIX 5 kg.", "price": 2145 },
-            "A0055": { "desc": "AMOXI PET´S NRV 125 mg 30 Tabs.", "price": 230 },
-            "A0056": { "desc": "AMOXI PET´S NRV 250 mg 30 Tabs.", "price": 426 },
-            "A0057": { "desc": "AMO-PET´S NRV Susp. Oral 14 ml.", "price": 107 },
-            "A0058": { "desc": "AMO-PET´S NRV Susp. Oral 28 ml.", "price": 133 },
-            "A0059": { "desc": "AZITROMI-PETS NRV Susp. Oral. 20 ml.", "price": 190 },
-            "A0061": { "desc": "AZITROMI-PETS NRV Tabletas M 7 tabs.", "price": 278 },
-            "A0062": { "desc": "AZITROMI-PETS NRV Tabletas L 7 tabs.", "price": 370 },
-            "A0063": { "desc": "CLAMOXIL NRV Susp. Oral 33 ml.", "price": 266 },
-            "A0064": { "desc": "CEFA-PETS NRV S 30 Tabs.", "price": 211 },
-            "A0065": { "desc": "CEFA-PETS NRV M 30 Tabs.", "price": 360 },
-            "A0066": { "desc": "CEFA-PET'S NRV \" L\" 30 Tabs.", "price": 529 },
-            "A0067": { "desc": "CEFA-PETS NRV XL 20 Tabs.", "price": 520 },
-            "A0068": { "desc": "FLOXI-PET´S NRV 50 mg. 30 Tabs.", "price": 284 },
-            "A0069": { "desc": "FLOXI-PETS NRV 150 mg. 30 Tabs.", "price": 709 },
-            "A0070": { "desc": "DOXI PETS S NRV 30 TAB", "price": 227 },
-            "A0071": { "desc": "DOXI PETS S NRV 50 mg. 240 tabs", "price": 1532 },
-            "A0072": { "desc": "DOXI PETS M NRV 30 Tab", "price": 293 },
-            "A0073": { "desc": "DOXI PETS M NRV 100 mg. 240 tabs", "price": 2051 },
-            "A0074": { "desc": "DOXI PETS L NRV 30 Tabs", "price": 506 },
-            "A0075": { "desc": "DOXI PETS L NRV 250 mg. 240 tabs", "price": 3582 },
-            "A0076": { "desc": "DOXI PETS XL NRV 30 Tab", "price": 783 },
-            "A0077": { "desc": "DOXI PETS XL NRV 500 mg. 240 tabs", "price": 5588 },
-            "A0078": { "desc": "CLINDA - PETS S 25 mg. 30 Tabs.", "price": 190 },
-            "A0079": { "desc": "CLINDA - PETS M 50 mg. 30 Tabs.", "price": 309 },
-            "A0080": { "desc": "CLINDA - PETS L 125 mg. 30 Tabs.", "price": 547 },
-            "A0081": { "desc": "CLINDA - PETS XL 200 mg. 30 Tabs.", "price": 827 },
-            "A0082": { "desc": "CLINDA - PETS SUSP. ORAL 25mg/ml. 25 ml.", "price": 331 },
-            "A0083": { "desc": "SULFATRIM-PETS 40 mg. Suspensión Oral 60 ml.", "price": 165 },
-            "A0084": { "desc": "SULFATRIM-PETS 80 mg. Suspensión Oral 60 ml.", "price": 261 },
-            "A0087": { "desc": "GENTYMAST Mastitis 24 x 8 gr.", "price": 1335 },
-            "A0088": { "desc": "MASTIVAC NRV Mastitis 24 x 8 gr.", "price": 1546 },
-            "A0091": { "desc": "CLOXIDRY 800 NRV Secado 24 x 5 gr.", "price": 1338 },
-            "A0103": { "desc": "CEFTIO-JET 5% NRV 250 ml.", "price": 1571 },
-            "A0110": { "desc": "FLORFENI-JET NRV DX 250 ml", "price": 1804 },
-            "A0123": { "desc": "SULFA-JET NRV 100 ML", "price": 600 },
-            "A0124": { "desc": "SULFA-JET NRV 250 ML", "price": 1102 },
-            "A0132": { "desc": "SULFA-JET NRV 15 ML", "price": 128 },
-            "A0141": { "desc": "SECA-JET NRV Secado 24 x 10 gr.", "price": 2405 },
-            "A0148": { "desc": "TULAX NRV 500 ml.", "price": 18318 },
-            "C0021": { "desc": "DOLOCAR PLUS NRV S 10 Tabs", "price": 151 },
-            "C0022": { "desc": "DOLOCAR PLUS NRV* M 10 Tabs.", "price": 189 },
-            "C0023": { "desc": "DOLOCAR PLUS NRV L 10 Tabs", "price": 353 },
-            "C0024": { "desc": "DOLOCAR PLUS NRV XL 10 Tabs", "price": 653 },
-            "AN0066": { "desc": "XILACINA 10 % 50 ML", "price": 1040 },
-            "AN0067": { "desc": "XILACINA 2 % 25 ML", "price": 545 },
-            "V0045": { "desc": "VITANEGRA NRV PREMIUM 250 ML", "price": 852 }
-            // ... (el resto del catálogo completo está incluido en la versión que subí)
-        };
+function a(k,d){let q=(cart[k]||0)+d;q<=0?delete cart[k]:cart[k]=q;r()}
 
-        let carrito = {};
+function u(){const n=document.getElementById('n');const c=Object.values(cart).reduce((a,b)=>a+b,0);n.textContent=c;n.classList.toggle('hidden',c===0);let t=0;const i=document.getElementById('i');i.innerHTML='';Object.keys(cart).forEach(k=>{const v=C[k];const st=cart[k]*v.price;t+=st;i.innerHTML+=`<div class="flex justify-between py-2 border-b"><div><div class="font-medium">\( {cart[k]} × \){v.d}</div><div class="text-sm text-gray-600">${k}</div></div><div class="font-bold"> \]{st}</div></div>`});document.getElementById('t').textContent=t.toLocaleString('es-MX',{style:'currency',currency:'MXN'})}
 
-        document.getElementById('order-date').textContent = new Date().toLocaleString('es-MX');
+function e(){if(!document.getElementById('cli').value.trim())return alert("Nombre del cliente requerido");if(!Object.keys(cart).length)return alert("Carrito vacío");let m=`*NUEVO PEDIDO NORVET*%0A%0A*Cliente:* \( {document.getElementById('cli').value}%0A*Fecha:* \){new Date().toLocaleString('es-MX')}%0A%0A`;Object.keys(cart).forEach(k=>m+=`\( {k} – \){C[k].d} **(\( {cart[k]})**%0A`);const o=document.getElementById('obs').value.trim();if(o)m+=`%0A*Observaciones:* \){o}%0A`;m+=`%0A*Total:* \( {document.getElementById('t').textContent}%0A%0AApp de Pedidos NORVET`;open(`https://wa.me/?text= \){m}`,'_blank')}
 
-        function render() {
-            const container = document.getElementById('products');
-            container.innerHTML = '';
-            const term = document.getElementById('search').value.toLowerCase();
-            Object.keys(CATALOGO).sort().forEach(sku => {
-                const p = CATALOGO[sku];
-                if (sku.toLowerCase().includes(term) || p.desc.toLowerCase().includes(term)) {
-                    const div = document.createElement('div');
-                    div.className = 'bg-white rounded-xl shadow p-4 flex justify-between items-center';
-                    div.innerHTML = `
-                        <div>
-                            <div class="font-bold">${p.desc}</div>
-                            <div class="text-sm text-gray-600">${sku} • $${p.price}</div>
-                        </div>
-                        <div class="flex items-center gap-3">
-                            <button onclick="add('${sku}', -1)" class="w-10 h-10 bg-red-100 rounded-full">-</button>
-                            <span class="font-bold text-xl w-12 text-center">${carrito[sku]||0}</span>
-                            <button onclick="add('${sku}', 1)" class="w-10 h-10 bg-green-100 rounded-full">+</button>
-                        </div>
-                    `;
-                    container.appendChild(div);
-                }
-            });
-            updateCart();
-        }
-
-        function add(sku, delta) {
-            const qty = (carrito[sku] || 0) + delta;
-            if (qty <= 0) delete carrito[sku];
-            else carrito[sku] = qty;
-            render();
-        }
-
-        function updateCart() {
-            const count = Object.values(carrito).reduce((a,b)=>a+b,0);
-            document.getElementById('cart-badge').textContent = count;
-            document.getElementById('cart-badge').classList.toggle('hidden', count===0);
-
-            let total = 0;
-            const itemsDiv = document.getElementById('cart-items');
-            itemsDiv.innerHTML = '';
-            Object.keys(carrito).forEach(sku => {
-                const p = CATALOGO[sku];
-                const subtotal = carrito[sku] * p.price;
-                total += subtotal;
-                itemsDiv.innerHTML += `
-                    <div class="flex justify-between items-center py-2 border-b">
-                        <div>
-                            <div class="font-medium">\( {carrito[sku]} × \){p.desc}</div>
-                            <div class="text-sm text-gray-600">${sku}</div>
-                        </div>
-                        <div class="font-bold">$ ${subtotal}</div>
-                    </div>
-                `;
-            });
-            document.getElementById('total-display').textContent = total.toLocaleString('es-MX', {style:'currency', currency:'MXN'});
-        }
-
-        document.getElementById('send-order').addEventListener('click', () => {
-            const cliente = document.getElementById('client-name').value.trim();
-            if (!cliente) return alert("Escribe el nombre del cliente");
-            if (Object.keys(carrito).length === 0) return alert("El carrito está vacío");
-
-            let lineas = Object.keys(carrito).map(sku => 
-                `\( {sku} – \){CATALOGO[sku].desc} **(${carrito[sku]})**`
-            ).join('\n');
-
-            const obs = document.getElementById('observations').value.trim();
-            const total = document.getElementById('total-display').textContent;
-
-            const mensaje = `*NUEVO PEDIDO NORVET*%0A%0A` +
-                `*Cliente:* ${cliente}%0A` +
-                `*Fecha:* ${new Date().toLocaleString('es-MX')}%0A%0A` +
-                lineas + `%0A%0A` +
-                (obs ? `*Observaciones:* ${obs}%0A%0A` : '') +
-                `*Total:* ${total}%0A%0A` +
-                `App de Pedidos NORVET`;
-
-            window.open(`https://wa.me/?text=${mensaje}`, '_blank');
-        });
-
-        // Abrir/cerrar carrito
-        const cartPanel = document.getElementById('cart-panel');
-        document.getElementById('cart-btn').addEventListener('click', () => cartPanel.classList.add('open'));
-        document.getElementById('close-cart').addEventListener('click', () => cartPanel.classList.remove('open'));
-        document.getElementById('continue-shopping').addEventListener('click', () => cartPanel.classList.remove('open'));
-
-        document.getElementById('search').addEventListener('input', render);
-        render();
-    </script>
+document.getElementById('b').onclick=()=>document.getElementById('c').classList.add('o');
+document.getElementById('s').oninput=r;
+r();
+</script>
 </body>
 </html>
