@@ -178,7 +178,7 @@
                 itemsDiv.innerHTML += `
                     <div class="flex justify-between items-center py-2 border-b">
                         <div>
-                            <div class="font-medium">\( {carrito[sku]} × \){p.desc}</div>
+                            <div class="font-medium">\( {{carrito[sku]}} × \){{p.desc}}</div>
                             <div class="text-sm text-gray-600">${sku}</div>
                         </div>
                         <div class="font-bold">$ ${subtotal}</div>
@@ -222,4 +222,5 @@
     </script>
 </body>
 </html>
+
 
