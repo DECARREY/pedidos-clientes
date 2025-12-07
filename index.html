@@ -1,108 +1,211 @@
 <!DOCTYPE html>
-<html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>NORVET 2025</title><script src="https://cdn.tailwindcss.com"></script><style>body{font-family:system-ui;background:#f9fafb}#p{transform:translateX(100%);transition:.3s}#p.o{transform:none}#b{position:fixed;bottom:1rem;right:1rem;z-index:40}#n{position:absolute;top:-8px;right:-8px;background:#dc2626;color:white;font-size:10px;border-radius:999px;width:18px;height:18px;display:flex;align-items:center;justify-content:center}</style></head><body class="min-h-screen">
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>NORVET 2025</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      font-family: system-ui;
+      background: #f9fafb
+    }
 
-<div class="max-w-lg mx-auto p-4 pb-24">
-  <h1 class="text-3xl font-bold text-indigo-700 text-center my-6">NORVET 2025</h1>
-  <input id="s" placeholder="Buscar producto..." class="w-full p-4 rounded-xl border text-lg mb-4 border">
-  <div id="l" class="space-y-3"></div>
-</div>
+    #p {
+      transform: translateX(100%);
+      transition: .3s
+    }
 
-<button id="b" class="bg-indigo-600 text-white p-5 rounded-full shadow-2xl">
-  <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
-  <span id="n" class="hidden">0</span>
-</button>
+    #p.o {
+      transform: none
+    }
 
-<div id="p" class="fixed inset-y-0 right-0 w-full max-w-md bg-white shadow-2xl z-50 flex flex-col">
-  <div class="bg-indigo-700 text-white p-4 flex justify-between items-center">
-    <h2 class="text-2xl font-bold">Tu Pedido</h2>
-    <button onclick="p.classList.remove('o')" class="text-3xl">×</button>
+    #b {
+      position: fixed;
+      bottom: 1rem;
+      right: 1rem;
+      z-index: 40
+    }
+
+    #n {
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      background: #dc2626;
+      color: white;
+      font-size: 10px;
+      border-radius: 999px;
+      width: 18px;
+      height: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center
+    }
+  </style>
+</head>
+<body class="min-h-screen">
+
+  <div class="max-w-lg mx-auto p-4 pb-24">
+    <h1 class="text-3xl font-bold text-indigo-700 text-center my-6">NORVET 2025</h1>
+    <input id="s" placeholder="Buscar producto..." class="w-full p-4 rounded-xl border text-lg mb-4 border">
+    <div id="l" class="space-y-3"></div>
   </div>
-  <div class="p-4 flex-1 overflow-y-auto">
-    <input id="cli" placeholder="Nombre del cliente *" class="w-full p-3 border rounded-lg mb-4 text-lg">
-    <p class="text-sm text-gray-600 mb-4"><strong>Fecha:</strong> <span id="f"></span></p>
-    <div id="i" class="space-y-3 mb-6"></div>
-    <textarea id="obs" placeholder="Observaciones (opcional)" class="w-full p-3 border rounded-lg h-20 resize-none"></textarea>
-    <button onclick="p.classList.remove('o')" class="w-full mt-4 bg-gray-200 py-3 rounded-xl font-bold">Seguir comprando</button>
+
+  <button id="b" class="bg-indigo-600 text-white p-5 rounded-full shadow-2xl">
+    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+    </svg>
+    <span id="n" class="hidden">0</span>
+  </button>
+
+  <div id="p" class="fixed inset-y-0 right-0 w-full max-w-md bg-white shadow-2xl z-50 flex flex-col">
+    <div class="bg-indigo-700 text-white p-4 flex justify-between items-center">
+      <h2 class="text-2xl font-bold">Tu Pedido</h2>
+      <button onclick="p.classList.remove('o')" class="text-3xl">×</button>
+    </div>
+    <div class="p-4 flex-1 overflow-y-auto">
+      <input id="cli" placeholder="Nombre del cliente *" class="w-full p-3 border rounded-lg mb-4 text-lg">
+      <p class="text-sm text-gray-600 mb-4"><strong>Fecha:</strong> <span id="f"></span></p>
+      <div id="i" class="space-y-3 mb-6"></div>
+      <textarea id="obs" placeholder="Observaciones (opcional)" class="w-full p-3 border rounded-lg h-20 resize-none"></textarea>
+      <button onclick="p.classList.remove('o')" class="w-full mt-4 bg-gray-200 py-3 rounded-xl font-bold">Seguir comprando</button>
+    </div>
+    <div class="border-t p-4 bg-gray-50">
+      <div class="flex justify-between text-2xl font-bold mb-4"><span>Total:</span><span id="t">$0</span></div>
+      <button onclick="e()" class="w-full bg-green-600 text-white font-bold py-4 rounded-xl text-xl">Enviar Pedido</button>
+    </div>
   </div>
-  <div class="border-t p-4 bg-gray-50">
-    <div class="flex justify-between text-2xl font-bold mb-4"><span>Total:</span><span id="t">$0</span></div>
-    <button onclick="e()" class="w-full bg-green-600 text-white font-bold py-4 rounded-xl text-xl">Enviar Pedido</button>
-  </div>
-</div>
 
-<script>
-// CATÁLOGO COMPLETO (incluye DOLOCAR, XILACINA, etc.)
-const C = {"A0003":{"desc":"CEFTRIA-PETS 50 mg NRV 10 ml.","price":142},"A0004":{"desc":"CEFTRIA-JET 75 mg NRV 20 ml.","price":205},"A0005":{"desc":"CEFTRIA-JET 75 mg NRV 100 ml.","price":790},"A0006":{"desc":"CLINDA- JET 100 mg/ml. 25 ml.","price":435},"A0007":{"desc":"FLOXI-JET 5% INY. NRV. 20 ml.","price":107},
-"A0010":{"desc":"FLOXI-JET 10% INY. NRV. 250 ml.","price":756},
-/* ... TODO el catálogo de 308 productos está aquí (lo tienes completo en el archivo que ya usaste antes) ... */
-"C0021":{"desc":"DOLOCAR PLUS NRV S 10 Tabs","price":151},
-"C0022":{"desc":"DOLOCAR PLUS NRV M 10 Tabs.","price":189},
-"C0023":{"desc":"DOLOCAR PLUS NRV L 10 Tabs","price":353},
-"C0024":{"desc":"DOLOCAR PLUS NRV XL 10 Tabs","price":653},
-"AN0066":{"desc":"XILACINA 10 % 50 ML","price":1040},
-"AN0067":{"desc":"XILACINA 2 % 25 ML","price":545},
-"V0045":{"desc":"VITANEGRA NRV PREMIUM 250 ML","price":852}};
+  <script>
+    // CATÁLOGO COMPLETO (incluye DOLOCAR, XILACINA, etc.)
+    const C = {
+      "A0003": {
+        "desc": "CEFTRIA-PETS 50 mg NRV 10 ml.",
+        "price": 142
+      },
+      "A0004": {
+        "desc": "CEFTRIA-JET 75 mg NRV 20 ml.",
+        "price": 205
+      },
+      "A0005": {
+        "desc": "CEFTRIA-JET 75 mg NRV 100 ml.",
+        "price": 790
+      },
+      "A0006": {
+        "desc": "CLINDA- JET 100 mg/ml. 25 ml.",
+        "price": 435
+      },
+      "A0007": {
+        "desc": "FLOXI-JET 5% INY. NRV. 20 ml.",
+        "price": 107
+      },
+      "A0010": {
+        "desc": "FLOXI-JET 10% INY. NRV. 250 ml.",
+        "price": 756
+      },
+      // ... Puedes incluir el resto de tu catálogo aquí ...
+      "C0021": {
+        "desc": "DOLOCAR PLUS NRV S 10 Tabs",
+        "price": 151
+      },
+      "C0022": {
+        "desc": "DOLOCAR PLUS NRV M 10 Tabs.",
+        "price": 189
+      },
+      "C0023": {
+        "desc": "DOLOCAR PLUS NRV L 10 Tabs",
+        "price": 353
+      },
+      "C0024": {
+        "desc": "DOLOCAR PLUS NRV XL 10 Tabs",
+        "price": 653
+      },
+      "AN0066": {
+        "desc": "XILACINA 10 % 50 ML",
+        "price": 1040
+      },
+      "AN0067": {
+        "desc": "XILACINA 2 % 25 ML",
+        "price": 545
+      },
+      "V0045": {
+        "desc": "VITANEGRA NRV PREMIUM 250 ML",
+        "price": 852
+      }
+    };
 
-let carrito = {};
+    let carrito = {};
 
-document.getElementById('f').textContent = new Date().toLocaleString('es-MX');
+    document.getElementById('f').textContent = new Date().toLocaleString('es-MX');
 
-function r(){
-  const l=document.getElementById('l');l.innerHTML='';
-  const q=document.getElementById('s').value.toLowerCase();
-  Object.keys(C).sort().forEach(k=>{
-    const v=C[k];
-    if(k.toLowerCase().includes(q)||v.desc.toLowerCase().includes(q)){
-      l.innerHTML+=`<div class="bg-white rounded-xl shadow p-4 flex justify-between items-center">
-        <div><div class="font-bold">\( {v.desc}</div><div class="text-sm text-gray-600"> \){k} • \[ {v.price}</div></div>
+    function r() {
+      const l = document.getElementById('l');
+      l.innerHTML = '';
+      const q = document.getElementById('s').value.toLowerCase();
+      Object.keys(C).sort().forEach(k => {
+        const v = C[k];
+        if (k.toLowerCase().includes(q) || v.desc.toLowerCase().includes(q)) {
+          l.innerHTML += `<div class="bg-white rounded-xl shadow p-4 flex justify-between items-center">
+        <div><div class="font-bold">${v.desc}</div><div class="text-sm text-gray-600">${k} • $${v.price}</div></div>
         <div class="flex items-center gap-3">
           <button onclick="a('${k}',-1)" class="w-10 h-10 bg-red-100 rounded-full">-</button>
           <span class="font-bold text-xl w-12 text-center">${carrito[k]||0}</span>
           <button onclick="a('${k}',1)" class="w-10 h-10 bg-green-100 rounded-full">+</button>
         </div>
       </div>`;
+        }
+      });
+      u();
     }
-  });
-  u();
-}
 
-function a(k,d){
-  let q=(carrito[k]||0)+d;
-  q<=0?delete carrito[k]:carrito[k]=q;
-  r();
-}
+    function a(k, d) {
+      let q = (carrito[k] || 0) + d;
+      q <= 0 ? delete carrito[k] : carrito[k] = q;
+      r();
+    }
 
-function u(){
-  const n=document.getElementById('n');
-  const c=Object.values(carrito).reduce((a,b)=>a+b,0);
-  n.textContent=c;
-  n.classList.toggle('hidden',c===0);
-  let t=0;
-  const i=document.getElementById('i');i.innerHTML='';
-  Object.keys(carrito).forEach(k=>{
-    const v=C[k],st=carrito[k]*v.price;t+=st;
-    i.innerHTML+=`<div class="flex justify-between py-2 border-b">
-      <div><div class="font-medium">\( {carrito[k]} × \){v.desc}</div><div class="text-sm text-gray-600">${k}</div></div>
-      <div class="font-bold"> \]{st}</div>
+    function u() {
+      const n = document.getElementById('n');
+      const c = Object.values(carrito).reduce((a, b) => a + b, 0);
+      n.textContent = c;
+      n.classList.toggle('hidden', c === 0);
+      let t = 0;
+      const i = document.getElementById('i');
+      i.innerHTML = '';
+      Object.keys(carrito).forEach(k => {
+        const v = C[k],
+          st = carrito[k] * v.price;
+        t += st;
+        // LÍNEA CORREGIDA
+        i.innerHTML += `<div class="flex justify-between py-2 border-b">
+      <div><div class="font-medium">${carrito[k]} × ${v.desc}</div><div class="text-sm text-gray-600">${k}</div></div>
+      <div class="font-bold">$${st.toLocaleString('es-MX')}</div>
     </div>`;
-  });
-  document.getElementById('t').textContent=t.toLocaleString('es-MX',{style:'currency',currency:'MXN'});
-}
+      });
+      document.getElementById('t').textContent = t.toLocaleString('es-MX', {
+        style: 'currency',
+        currency: 'MXN'
+      });
+    }
 
-function e(){
-  if(!document.getElementById('cli').value.trim())return alert("Nombre del cliente requerido");
-  if(!Object.keys(carrito).length)return alert("Carrito vacío");
-  let m=`*NUEVO PEDIDO NORVET*%0A%0A*Cliente:* \( {document.getElementById('cli').value}%0A*Fecha:* \){new Date().toLocaleString('es-MX')}%0A%0A`;
-  Object.keys(carrito).forEach(k=>m+=`\( {k} – \){C[k].desc} **(${carrito[k]})**%0A`);
-  const o=document.getElementById('obs').value.trim();
-  if(o)m+=`%0A*Observaciones:* ${o}%0A`;
-  m+=`%0A*Total:* ${document.getElementById('t').textContent}%0A%0AApp de Pedidos NORVET`;
-  open(`https://wa.me/?text=${m}`,'_blank');
-}
+    function e() {
+      if (!document.getElementById('cli').value.trim()) return alert("Nombre del cliente requerido");
+      if (!Object.keys(carrito).length) return alert("Carrito vacío");
 
-document.getElementById('b').onclick=()=>document.getElementById('p').classList.add('o');
-document.getElementById('s').oninput=r;
-r();
-</script>
+      // LÍNEAS CORREGIDAS
+      let m = `*NUEVO PEDIDO NORVET*%0A%0A*Cliente:* ${document.getElementById('cli').value}%0A*Fecha:* ${new Date().toLocaleString('es-MX')}%0A%0A`;
+      
+      Object.keys(carrito).forEach(k => m += `${k} – ${C[k].desc} **(${carrito[k]})**%0A`);
+
+      const o = document.getElementById('obs').value.trim();
+      if (o) m += `%0A*Observaciones:* ${o}%0A`;
+      m += `%0A*Total:* ${document.getElementById('t').textContent}%0A%0AApp de Pedidos NORVET`;
+      open(`https://wa.me/?text=${m}`, '_blank');
+    }
+
+    document.getElementById('b').onclick = () => document.getElementById('p').classList.add('o');
+    document.getElementById('s').oninput = r;
+    r();
+  </script>
 </body>
 </html>
