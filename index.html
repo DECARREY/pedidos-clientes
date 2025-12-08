@@ -97,7 +97,7 @@ function e(){
   ).join('%0A');
   const obs = document.getElementById('obs').value.trim();
   const total = document.getElementById('t').textContent;
-  const msg = `*NUEVO PEDIDO NORVET*%0A%0A*Cliente:* ${document.getElementById('cli').value}%0A*Fecha:* ${new Date().toLocaleString('es-MX')}%0A%0A${lineas}${obs?`%0A*Observaciones:* ${obs}`:''}%0A%0A*Total:* ${total}%0A%0AApp de Pedidos NORVET`;
+  const msg = `*NUEVO PEDIDO NORVET*%0A%0A*Cliente:* ${document.getElementById('cli').value}%0A*Fecha:* ${new Date().toLocaleString('es-MX')}%0A%0A${lineas}${obs?`%0A*Observaciones:* ${obs}`:''}%0A%0A*Total:* ${total}%0A%0APedidos NORVET`;
   open(`https://wa.me/?text=${msg}`,'_blank');
 }
 
@@ -107,3 +107,4 @@ r();
 </script>
 </body>
 </html>
+
