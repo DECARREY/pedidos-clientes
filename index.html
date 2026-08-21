@@ -1094,6 +1094,7 @@
             if (qty <= 0) delete carrito[sku];
             else carrito[sku] = qty;
             render();
+            saveDraft();
         }
 
         function updateCart() {
@@ -1154,6 +1155,7 @@
                     clientSuggestions.innerHTML = '';
                     clientSelectedInfo.textContent = `${c.sap} • Vendedor: ${c.vendedor}${c.dir ? ' • ' + c.dir : ''}`;
                     clientSelectedInfo.classList.remove('hidden');
+                    saveDraft();
                 });
             });
         }
@@ -1162,11 +1164,64 @@
             selectedCliente = null;
             clientSelectedInfo.classList.add('hidden');
             renderClientSuggestions();
+            saveDraft();
         });
         clientInput.addEventListener('focus', renderClientSuggestions);
         document.addEventListener('click', (e) => {
             if (!e.target.closest('#client-name') && !e.target.closest('#client-suggestions')) {
                 clientSuggestions.classList.add('hidden');
+            }
+        });
+
+        // Guardar avance del pedido para no perderlo si se cierra o recarga la página por error
+        const DRAFT_KEY = 'pedidosNorvetDraft';
+        const observationsInput = document.getElementById('observations');
+
+        function saveDraft() {
+            try {
+                localStorage.setItem(DRAFT_KEY, JSON.stringify({
+                    carrito: carrito,
+                    clientName: clientInput.value,
+                    clienteSap: selectedCliente ? selectedCliente.sap : null,
+                    observaciones: observationsInput.value
+                }));
+            } catch (e) {}
+        }
+
+        function loadDraft() {
+            try {
+                const raw = localStorage.getItem(DRAFT_KEY);
+                if (!raw) return;
+                const draft = JSON.parse(raw);
+                if (draft.carrito) carrito = draft.carrito;
+                if (draft.clientName) clientInput.value = draft.clientName;
+                if (draft.clienteSap) {
+                    const c = CLIENTES.find(x => x.sap === draft.clienteSap);
+                    if (c) {
+                        selectedCliente = c;
+                        clientSelectedInfo.textContent = `${c.sap} • Vendedor: ${c.vendedor}${c.dir ? ' • ' + c.dir : ''}`;
+                        clientSelectedInfo.classList.remove('hidden');
+                    }
+                }
+                if (draft.observaciones) observationsInput.value = draft.observaciones;
+            } catch (e) {}
+        }
+
+        function clearDraft() {
+            carrito = {};
+            selectedCliente = null;
+            clientInput.value = '';
+            clientSelectedInfo.classList.add('hidden');
+            observationsInput.value = '';
+            localStorage.removeItem(DRAFT_KEY);
+        }
+
+        observationsInput.addEventListener('input', saveDraft);
+
+        window.addEventListener('beforeunload', (e) => {
+            if (Object.keys(carrito).length > 0) {
+                e.preventDefault();
+                e.returnValue = '';
             }
         });
 
@@ -1195,6 +1250,9 @@
                 `App de Pedidos NORVET`;
 
             window.open(`https://wa.me/?text=${mensaje}`, '_blank');
+
+            clearDraft();
+            render();
         });
 
         // Abrir/cerrar carrito
@@ -1204,6 +1262,7 @@
         document.getElementById('continue-shopping').addEventListener('click', () => cartPanel.classList.remove('open'));
 
         document.getElementById('search').addEventListener('input', render);
+        loadDraft();
         render();
     </script>
 </body>
